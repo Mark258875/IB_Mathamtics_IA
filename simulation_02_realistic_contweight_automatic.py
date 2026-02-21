@@ -7,8 +7,8 @@ from scipy.optimize import root_scalar, root
 # 1. CONFIGURATION
 # ==========================================
 D = 200.0         # Horizontal span (m)
-H_tower = 50.0    # Vertical height difference (m)
-m_g = 500.0       # Mass of the loaded gondola (kg)
+H_tower = 300.0    # Vertical height difference (m)
+m_g = 250.0       # Mass of the loaded gondola (kg)
 lam = 5.0         # Rope linear density (kg/m)
 g = 9.81          # Gravity (m/s^2)
 
