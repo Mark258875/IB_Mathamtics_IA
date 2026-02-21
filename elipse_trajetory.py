@@ -53,6 +53,20 @@ plt.plot([0, D], [0, H], 'ks', markersize=8, label='Anchor Stations (Foci)')
 plt.plot([0, 0], [0, y_vals[0]], 'r:', linewidth=2, label='Slack at start')
 plt.plot([D, D], [H, y_vals[-1]], 'r:', linewidth=2)
 
+# Add a text box with the values of the constants
+text_str = '\n'.join((
+    r'$\mathbf{System\ Constants:}$',
+    f'$D = {D:.1f}$ m (Span)',
+    f'$H = {H:.1f}$ m (Height)',
+    f'$L = {L:.1f}$ m (Rope Length)',
+    f'$R = {R:.1f}$ m (Direct Distance)'
+))
+# Place the text box in the upper left corner of the axes
+props = dict(boxstyle='round', facecolor='white', alpha=0.9, edgecolor='gray')
+ax = plt.gca()
+ax.text(0.05, 0.95, text_str, transform=ax.transAxes, fontsize=11,
+        verticalalignment='top', bbox=props)
+
 # Graph formatting
 plt.title(f"Idealized Massless Rope Model: Elliptical Trajectory of Gondola\nDomain: $x \in [0, {D}]$", fontsize=14)
 plt.xlabel("Horizontal Distance x [m]", fontsize=12)
