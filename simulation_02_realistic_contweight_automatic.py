@@ -12,7 +12,6 @@ m_g = 500.0       # Mass of the loaded gondola (kg)
 lam = 5.0         # Rope linear density (kg/m)
 g = 9.81          # Gravity (m/s^2)
 
-
 # --- 2. CALCULATE TRUE COUNTERWEIGHT (Loaded Horizontal Departure) ---
 def find_a(a):
     if a <= 0: return 1e9
@@ -32,24 +31,17 @@ print(f"-> Gondola Mass (m_g):       {m_g} kg")
 print(f"-> REQUIRED COUNTERWEIGHT:   {M_cw:.2f} kg")
 print("="*40 + "\n")
 
-
 # --- 3. CALCULATE UNLOADED ROPE (Gondola removed) ---
-# When the gondola is removed, the tension at (0,0) is still M_cw * g.
-# But without the 500kg weight, the heavy counterweight pulls the rope tighter.
 def solve_unloaded():
     def sys(vars):
         H_u, c1_u = vars
         a_u = H_u / (lam * g)
         
-        # Matches tower height
         y_D = a_u * np.cosh((D - c1_u)/a_u) - a_u * np.cosh(-c1_u/a_u)
-        
-        # Tension at origin equals counterweight weight: T = H * cosh(-c1/a)
         T_0 = H_u * np.cosh(-c1_u/a_u)
         
         return [y_D - H_tower, T_0 - (M_cw * g)]
 
-    # Initial guess: Tension is almost all horizontal, c1 is shifted right
     guess = [M_cw * g * 0.95, 10] 
     sol = root(sys, guess, method='lm')
     return sol.x if sol.success else guess
@@ -58,7 +50,6 @@ H_unl, c1_unl = solve_unloaded()
 a_unl = H_unl / (lam * g)
 unloaded_x = np.linspace(0, D, 100)
 unloaded_y = a_unl * np.cosh((unloaded_x - c1_unl)/a_unl) - a_unl * np.cosh(-c1_unl/a_unl)
-
 
 # --- 4. PHYSICS SOLVER FOR MOVING GONDOLA ---
 def solve_state(x_g):
@@ -85,7 +76,6 @@ def solve_state(x_g):
     sol = root(system, guess, method='lm')
     return sol.x if sol.success else guess
 
-
 # --- 5. PRE-COMPUTE FRAMES ---
 print("Simulating physics frames...")
 FRAMES = 80
@@ -110,7 +100,6 @@ for x_g in x_gondola_vals:
 traj_x = [data[0] for data in frame_data]
 traj_y = [data[1] for data in frame_data]
 
-
 # --- 6. MATPLOTLIB ANIMATION ---
 fig, ax = plt.subplots(figsize=(12, 7))
 
@@ -131,10 +120,25 @@ rope_line, = ax.plot([], [], 'b-', linewidth=2, label='Loaded Piecewise Rope')
 trajectory_line, = ax.plot([], [], 'r-', linewidth=3, alpha=0.6, label='Gondola Trajectory')
 gondola_dot, = ax.plot([], [], 'ro', markersize=10, markeredgecolor='black')
 
-ax.set_title(f"Simulation: Horizontal Departure Condition Satisfied\nCounterweight: {M_cw:.0f} kg", fontsize=14)
+# --- ADD PARAMETER TEXT BOX ---
+text_str = '\n'.join((
+    r'$\mathbf{System\ Parameters:}$',
+    f'$D = {D:.1f}$ m (Span)',
+    f'$H = {H_tower:.1f}$ m (Tower Height)',
+    f'$m_g = {m_g:.1f}$ kg (Gondola Mass)',
+    f'$\lambda = {lam:.1f}$ kg/m (Rope Density)',
+    r'$\mathbf{Calculated:}$',
+    f'$M_{{cw}} = {M_cw:.1f}$ kg (Counterweight)'
+))
+props = dict(boxstyle='round', facecolor='white', alpha=0.9, edgecolor='gray')
+ax.text(0.05, 0.95, text_str, transform=ax.transAxes, fontsize=11,
+        verticalalignment='top', bbox=props)
+
+
+ax.set_title("Gondola Trajectory with Horizontal Departure Constraint", fontsize=14)
 ax.set_xlabel("Horizontal Distance (m)")
 ax.set_ylabel("Vertical Height (m)")
-ax.legend(loc='upper left')
+ax.legend(loc='upper right') # Moved legend to avoid overlapping the text box
 
 def init():
     rope_line.set_data([], [])
