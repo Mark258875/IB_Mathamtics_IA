@@ -96,7 +96,7 @@ trajectory_line, = ax.plot([], [], 'r-', linewidth=3, alpha=0.7, label='Gondola 
 gondola_dot, = ax.plot([], [], 'ro', markersize=10, markeredgecolor='black')
 
 # Text labels
-ax.set_title("Gondola Physics Simulation: Trajectory vs. Rope Shape", fontsize=14)
+ax.set_title("Simulation of Gondola Trajectory (Trajectory vs. Rope Shape)", fontsize=14)
 ax.set_xlabel("Horizontal Distance (m)")
 ax.set_ylabel("Vertical Height (m)")
 ax.legend(loc='upper left')
