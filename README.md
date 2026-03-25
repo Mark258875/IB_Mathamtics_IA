@@ -10,10 +10,14 @@ This project serves as documentation for an Internal Assessment for an IB Mathem
 ### 1. Prerequisites
 Ensure you have Python installed. This project uses `uv` for dependency management.
 First, install `uv` globally:
+MAC or LINUX:
 ```bash
-pip install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
-
+WINDOWS: 
+```
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
 ### 2. Installation
 Use the provided `Makefile` to install all project dependencies:
 ```bash
